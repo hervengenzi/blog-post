@@ -10,9 +10,10 @@ class Blog extends Component {
     state = {
         posts: [],
         isSelected: null,
+        error: false,
     }
     componentDidMount(){
-        axios.get('https://jsonplaceholder.typicode.com/posts')
+        axios.get('/posts')
         .then(response => {
             const posts = response.data.slice(0, 4);
             const updatedPost = posts.map(post => {
@@ -22,6 +23,9 @@ class Blog extends Component {
                 }
             });
             this.setState({posts: updatedPost});
+        })
+        .catch(error => {
+            this.setState({error: true});
         });
     }
 
@@ -29,27 +33,31 @@ class Blog extends Component {
         this.setState({isSelected: id});
     }
     render () {
-        const posts = this.state.posts.map(post => {
-            return <Post 
-                        key={post.id} 
-                        title={post.title} 
-                        author={post.author}
-                        clicked={() => this.postSelectedHandler(post.id)}/>
-        });
-        return (
-            <div>
-                <section className="Posts">
-                    {posts}
-                </section>
-                <section>
-                    <FullPost 
-                        id={this.state.isSelected} />
-                </section>
-                <section>
-                    <NewPost />
-                </section>
-            </div>
-        );
+        let posts = <p style={{textAlign: 'center'}}>!!Something went wrong</p>;
+        if(!this.state.error){
+            posts = this.state.posts.map(post => {
+                return <Post 
+                            key={post.id} 
+                            title={post.title} 
+                            author={post.author}
+                            clicked={() => this.postSelectedHandler(post.id)}/>
+            });
+        }
+            return (
+                <div>
+                    <section className="Posts">
+                        {posts}
+                    </section>
+                    <section>
+                        <FullPost 
+                            id={this.state.isSelected} />
+                    </section>
+                    <section>
+                        <NewPost />
+                    </section>
+                </div>
+            );
+    
     }
 }
 
