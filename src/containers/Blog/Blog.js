@@ -13,7 +13,7 @@ class Blog extends Component {
         error: false,
     }
     componentDidMount(){
-        axios.get('https://jsonplaceholder.typicode.com/postsss')
+        axios.get('/posts')
         .then(response => {
             const posts = response.data.slice(0, 4);
             const updatedPost = posts.map(post => {
@@ -33,7 +33,7 @@ class Blog extends Component {
         this.setState({isSelected: id});
     }
     render () {
-        let posts = <p style={{textAlign: 'center'}}>Something went wrong</p>;
+        let posts = <p style={{textAlign: 'center'}}>!!Something went wrong</p>;
         if(!this.state.error){
             posts = this.state.posts.map(post => {
                 return <Post 
@@ -42,6 +42,7 @@ class Blog extends Component {
                             author={post.author}
                             clicked={() => this.postSelectedHandler(post.id)}/>
             });
+        }
             return (
                 <div>
                     <section className="Posts">
@@ -56,7 +57,6 @@ class Blog extends Component {
                     </section>
                 </div>
             );
-        }
     
     }
 }
